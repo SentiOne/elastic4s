@@ -1,11 +1,13 @@
 package com.sksamuel.elastic4s.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.{ObjectNode, TextNode}
+import com.sksamuel.elastic4s.http.search.SearchResponse
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.mockito.Mockito
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
+
+import scala.collection.mutable.ArrayBuffer
 
 class ElasticJacksonIndexableTest extends WordSpec with Matchers with ElasticSugar with MockitoSugar {
 
@@ -44,14 +46,15 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with ElasticSug
     }
     "support custom mapper" in {
 
+      val searchResponseMock = mock[SearchResponse]
       implicit val mapper: ObjectMapper = mock[ObjectMapper]
-      Mockito.when(mapper.readTree(org.mockito.Matchers.anyString)).thenReturn(mock[ObjectNode])
+      Mockito.when(mapper.readValue(org.mockito.Matchers.anyString, org.mockito.Matchers.any(classOf[Class[SearchResponse]]))).thenReturn(searchResponseMock)
 
       val resp = client.execute {
         search("jacksontest" / "characters").query("breaking")
       }.await
-      // our custom mapper will just return null so that should be returned
-      resp.to[Character].toList shouldBe List(null)
+
+      resp shouldBe searchResponseMock
     }
   }
 }

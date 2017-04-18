@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.circe
 
-import com.sksamuel.elastic4s.searches.RichSearchHit
+//import com.sksamuel.elastic4s.searches.RichSearchHit
 import org.elasticsearch.search.SearchHit
 import org.scalatest.mock.MockitoSugar._
 import org.scalatest.{GivenWhenThen, Matchers, WordSpec}
@@ -27,15 +27,15 @@ class CodecDerivationTest extends WordSpec with Matchers with GivenWhenThen {
       """ shouldNot compile
     }
 
-    "extract the correct values" in {
-      Given("a search hit")
-      val javaHit = mock[SearchHit]
-      val hit = RichSearchHit(javaHit)
-
-      val source = """
-        { "name": "Cafe Blue", "place": { "id": 3, "name": "Munich" } }
-      """
-    }
+//    "extract the correct values" in {
+//      Given("a search hit")
+//      val javaHit = mock[SearchHit]
+//      val hit = RichSearchHit(javaHit)
+//
+//      val source = """
+//        { "name": "Cafe Blue", "place": { "id": 3, "name": "Munich" } }
+//      """
+//    }
   }
 
   "A derived Indexable instance" should {

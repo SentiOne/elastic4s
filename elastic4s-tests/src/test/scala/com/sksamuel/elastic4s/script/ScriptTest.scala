@@ -6,6 +6,7 @@ import org.elasticsearch.search.sort.SortOrder
 import org.scalatest.FreeSpec
 
 class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   client.execute {
     bulk(
@@ -38,8 +39,8 @@ class ScriptTest extends FreeSpec with ElasticMatchers with ElasticSugar {
             .NUMBER order SortOrder.DESC
         }
       }.await
-      sorted.hits(0).sourceAsMap("name") shouldBe "south kensington"
-      sorted.hits(3).sourceAsMap("name") shouldBe "bank"
+      sorted.hits.hits(0).sourceAsMap("name") shouldBe "south kensington"
+      sorted.hits.hits(3).sourceAsMap("name") shouldBe "bank"
     }
   }
 

@@ -6,6 +6,7 @@ import org.elasticsearch.common.unit.Fuzziness
 import org.scalatest.{Matchers, WordSpec}
 
 class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""
@@ -42,7 +43,7 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
     }
   }.await
 
-  val result = resp.suggestion("a")
+  val result = resp.completionSuggestion("a")
   println(result)
 
   val entries = result.entries.toList
@@ -57,7 +58,7 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
         }
       }.await
 
-      val entry = resp.suggestion("a").entries.head
+      val entry = resp.completionSuggestion("a").entries.head
       entry.optionsText shouldBe List("The Big Sky")
     }
     "support max results" in {
@@ -68,7 +69,7 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
         }
       }.await
 
-      val entry = resp.suggestion("a").entries.head
+      val entry = resp.completionSuggestion("a").entries.head
       entry.optionsText shouldBe List("Rocket Man")
     }
     "support lookups by prefix" in {
@@ -79,7 +80,7 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
         }
       }.await
 
-      val entry = resp.suggestion("a").entries.head
+      val entry = resp.completionSuggestion("a").entries.head
       entry.optionsText shouldBe List("Rubberband Girl", "Running Up that Hill")
     }
     "support fuzzy prefix lookups" in {
@@ -90,7 +91,7 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
         }
       }.await
 
-      val entry = resp.suggestion("a").entries.head
+      val entry = resp.completionSuggestion("a").entries.head
       entry.optionsText shouldBe List("Rubberband Girl")
     }
   }

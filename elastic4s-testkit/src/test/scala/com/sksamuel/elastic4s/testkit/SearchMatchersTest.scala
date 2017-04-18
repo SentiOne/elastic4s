@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.testkit
 import org.scalatest.WordSpec
 
 class SearchMatchersTest extends WordSpec with SearchMatchers with ElasticSugar {
+  import DefaultJsonImplicits._
 
   val indexname = "searchmatchers"
   val tubestops = "tubestops"

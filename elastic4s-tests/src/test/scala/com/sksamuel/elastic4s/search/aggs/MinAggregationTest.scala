@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 class MinAggregationTest extends AbstractAggregationTest {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   "min aggregation" - {
     "should count min value for field" in {
@@ -10,8 +11,8 @@ class MinAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 10
-      val aggs = resp.aggregations.minResult("agg1")
-      aggs.getValue shouldBe 26
+      val agg = resp.aggregations("agg1").asInstanceOf[Map[String, Double]]("value")
+      agg shouldBe 26
     }
   }
 }

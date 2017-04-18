@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 class MissingAggregationHttpTest extends AbstractAggregationTest {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   "missing aggregation" - {
     "should return documents missing a value" in {
@@ -10,8 +11,8 @@ class MissingAggregationHttpTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 10
-      val aggs = resp.aggregations.missingResult("agg1")
-      aggs.getDocCount shouldBe 7
+      val agg = resp.aggregations("agg1").asInstanceOf[Map[String, Integer]]("doc_count")
+      agg shouldBe 7
     }
   }
 }

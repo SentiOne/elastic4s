@@ -9,6 +9,7 @@ class SearchTest
     with SharedElasticSugar
     with ElasticMatchers
     with ElasticDsl {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   client.execute {
     bulk(

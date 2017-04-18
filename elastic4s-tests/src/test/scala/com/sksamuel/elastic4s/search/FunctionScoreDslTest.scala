@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.http.ElasticDsl
 
 class FunctionScoreDslTest extends ElasticDsl {
 

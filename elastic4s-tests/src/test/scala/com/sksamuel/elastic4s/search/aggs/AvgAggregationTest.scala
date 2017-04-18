@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import org.elasticsearch.search.aggregations.metrics.avg.InternalAvg
-
 class AvgAggregationTest extends AbstractAggregationTest {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   "avg aggregation" - {
     "should average by field" in {
@@ -12,8 +11,8 @@ class AvgAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 10
-      val agg = resp.aggregations.getAsMap.get("agg1").asInstanceOf[InternalAvg]
-      agg.getValue shouldBe 45.4
+      val agg = resp.aggregations("agg1").asInstanceOf[Map[String, Double]]("value")
+      agg shouldBe 45.4
     }
     "should only include matching documents in the query" in {
       val resp = client.execute {
@@ -23,8 +22,8 @@ class AvgAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 3
-      val agg = resp.aggregations.avgResult("agg1")
-      agg.getValue shouldBe 55
+      val agg = resp.aggregations("agg1").asInstanceOf[Map[String, Double]]("value")
+      agg shouldBe 55
     }
   }
 }

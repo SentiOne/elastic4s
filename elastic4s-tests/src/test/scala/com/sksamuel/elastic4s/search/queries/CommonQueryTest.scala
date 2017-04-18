@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class CommonQueryTest extends WordSpec with Matchers with ElasticSugar {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   case class Condiment(name: String, desc: String)
   implicit object CondimentIndexable extends Indexable[Condiment] {

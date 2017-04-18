@@ -1,17 +1,18 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.TcpClient
+import com.sksamuel.elastic4s.http.HttpClient
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 trait IndexMatchers extends Matchers {
+  import DefaultJsonImplicits._
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.http.ElasticDsl._
 
   import scala.concurrent.duration._
 
   def haveCount(expectedCount: Int)
-               (implicit client: TcpClient,
+               (implicit client: HttpClient,
                 timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     def apply(left: String): MatchResult = {
@@ -25,7 +26,7 @@ trait IndexMatchers extends Matchers {
   }
 
   def containDoc(expectedId: Any)
-                (implicit client: TcpClient,
+                (implicit client: HttpClient,
                  timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     override def apply(left: String): MatchResult = {
@@ -38,7 +39,7 @@ trait IndexMatchers extends Matchers {
     }
   }
 
-  def beCreated(implicit client: TcpClient,
+  def beCreated(implicit client: HttpClient,
                 timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     override def apply(left: String): MatchResult = {
@@ -51,7 +52,7 @@ trait IndexMatchers extends Matchers {
     }
   }
 
-  def beEmpty(implicit client: TcpClient,
+  def beEmpty(implicit client: HttpClient,
               timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
 
     override def apply(left: String): MatchResult = {

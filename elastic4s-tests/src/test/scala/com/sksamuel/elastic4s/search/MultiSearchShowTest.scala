@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import com.sksamuel.elastic4s.{ElasticDsl, JsonSugar}
+import com.sksamuel.elastic4s.JsonSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class MultiSearchShowTest extends WordSpec with Matchers with ElasticSugar with JsonSugar {
-
   "MultiSearch" should {
     "have a show typeclass implementation" in {
       val request = {

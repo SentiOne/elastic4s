@@ -4,7 +4,7 @@ import org.scalatest.WordSpec
 
 class CreateIndexTemplateDefinitionTest extends WordSpec {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.http.ElasticDsl._
 
   val req = createTemplate("my_template").pattern("matchme.*").mappings(
     mapping("sometype1").fields(

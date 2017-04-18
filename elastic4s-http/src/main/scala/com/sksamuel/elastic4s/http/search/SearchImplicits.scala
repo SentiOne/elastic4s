@@ -78,4 +78,17 @@ trait SearchImplicits {
       executeAsyncAndMapResponse(client.performRequestAsync("POST", endpoint, params.asJava, entity, _), format)
     }
   }
+
+  implicit class SearchDefinitionShowOps(f: SearchDefinition) {
+    def show: String = SearchShow.show(f)
+  }
+
+  implicit object MultiSearchDefinitionShow extends Show[MultiSearchDefinition] {
+    import compat.Platform.EOL
+    override def show(f: MultiSearchDefinition): String = f.searches.map(_.show).mkString("[" + EOL, "," + EOL, "]")
+  }
+
+  implicit class MultiSearchDefinitionShowOps(f: MultiSearchDefinition) {
+    def show: String = MultiSearchDefinitionShow.show(f)
+  }
 }

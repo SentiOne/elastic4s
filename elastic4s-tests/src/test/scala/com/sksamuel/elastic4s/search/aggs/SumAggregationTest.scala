@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 class SumAggregationTest extends AbstractAggregationTest {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   "sum aggregation" - {
     "should sum values for field" in {
@@ -10,8 +11,8 @@ class SumAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 10
-      val aggs = resp.aggregations.sumResult("agg1")
-      aggs.getValue shouldBe 454.0
+      val agg = resp.aggregations("agg1").asInstanceOf[Map[String, Double]]("value")
+      agg shouldBe 454.0
     }
   }
 }

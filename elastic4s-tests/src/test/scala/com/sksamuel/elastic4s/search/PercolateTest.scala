@@ -6,6 +6,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
 
 class PercolateTest extends FlatSpec with Matchers with MockitoSugar with ElasticSugar {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   client.execute {
     createIndex("percolate").mappings(
@@ -40,7 +41,7 @@ class PercolateTest extends FlatSpec with Matchers with MockitoSugar with Elasti
     }.await
 
     matches.size shouldBe 1
-    matches.hits.head.id shouldBe "1"
+    matches.hits.hits.head.id shouldBe "1"
   }
 
   "a percolate request for existing document" should "return queries that match the document" in {
@@ -57,6 +58,6 @@ class PercolateTest extends FlatSpec with Matchers with MockitoSugar with Elasti
     }.await
 
     matches.size shouldBe 1
-    matches.hits.head.id shouldBe "3"
+    matches.hits.hits.head.id shouldBe "3"
   }
 }

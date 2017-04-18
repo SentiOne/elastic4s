@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 class CardinalityAggregationTest extends AbstractAggregationTest {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   "cardinality aggregation" - {
     "should count distinct values" in {
@@ -10,8 +11,8 @@ class CardinalityAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 10
-      val aggs = resp.aggregations.cardinalityResult("agg1")
-      aggs.getValue shouldBe 5
+      val agg = resp.aggregations("agg1").asInstanceOf[Map[String, Integer]]("value")
+      agg shouldBe 5
     }
   }
 }

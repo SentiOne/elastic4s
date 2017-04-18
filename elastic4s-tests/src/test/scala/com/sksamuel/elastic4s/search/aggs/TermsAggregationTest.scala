@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import org.elasticsearch.search.aggregations.bucket.terms.StringTerms
-
 class TermsAggregationTest extends AbstractAggregationTest {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   "terms aggregation" - {
     "should group by field" in {
@@ -14,13 +13,14 @@ class TermsAggregationTest extends AbstractAggregationTest {
       }.await
       resp.totalHits shouldBe 10
 
-      val agg = resp.aggregations.map("agg1").asInstanceOf[StringTerms]
-      agg.getBuckets.size shouldBe 5
-      agg.getBucketByKey("meth kingpin").getDocCount shouldBe 2
-      agg.getBucketByKey("meth sidekick").getDocCount shouldBe 3
-      agg.getBucketByKey("dea agent").getDocCount shouldBe 2
-      agg.getBucketByKey("lawyer").getDocCount shouldBe 1
-      agg.getBucketByKey("heavy").getDocCount shouldBe 2
+      val buckets = getBuckets(resp)
+      buckets.size shouldBe 5
+
+      getBucketDocCountByKey(buckets, "meth kingpin") shouldBe 2
+      getBucketDocCountByKey(buckets, "meth sidekick") shouldBe 3
+      getBucketDocCountByKey(buckets, "dea agent") shouldBe 2
+      getBucketDocCountByKey(buckets, "lawyer") shouldBe 1
+      getBucketDocCountByKey(buckets, "heavy") shouldBe 2
     }
 
     "should only include matching documents in the query" in {
@@ -31,10 +31,10 @@ class TermsAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 3
-      val aggs = resp.aggregations.map("agg1").asInstanceOf[StringTerms]
-      aggs.getBuckets.size shouldBe 2
-      aggs.getBucketByKey("dea agent").getDocCount shouldBe 2
-      aggs.getBucketByKey("lawyer").getDocCount shouldBe 1
+      val buckets = getBuckets(resp)
+      buckets.size shouldBe 2
+      getBucketDocCountByKey(buckets, "dea agent") shouldBe 2
+      getBucketDocCountByKey(buckets, "lawyer") shouldBe 1
     }
 
     "should only return included fields" in {
@@ -44,9 +44,9 @@ class TermsAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 10
-      val agg = resp.aggregations.map("agg1").asInstanceOf[StringTerms]
-      agg.getBuckets.size shouldBe 1
-      agg.getBucketByKey("lawyer").getDocCount shouldBe 1
+      val buckets = getBuckets(resp)
+      buckets.size shouldBe 1
+      getBucketDocCountByKey(buckets, "lawyer") shouldBe 1
     }
 
     "should not return excluded fields" in {
@@ -57,13 +57,12 @@ class TermsAggregationTest extends AbstractAggregationTest {
       }.await
       resp.totalHits shouldBe 10
 
-
-      val agg = resp.aggregations.stringTermsResult("agg1")
-      agg.getBuckets.size shouldBe 4
-      agg.getBucketByKey("meth sidekick").getDocCount shouldBe 3
-      agg.getBucketByKey("meth kingpin").getDocCount shouldBe 2
-      agg.getBucketByKey("dea agent").getDocCount shouldBe 2
-      agg.getBucketByKey("heavy").getDocCount shouldBe 2
+      val buckets = getBuckets(resp)
+      buckets.size shouldBe 4
+      getBucketDocCountByKey(buckets, "meth sidekick") shouldBe 3
+      getBucketDocCountByKey(buckets, "meth kingpin") shouldBe 2
+      getBucketDocCountByKey(buckets, "dea agent") shouldBe 2
+      getBucketDocCountByKey(buckets, "heavy") shouldBe 2
     }
 
     "should only return included fields (given a seq)" in {
@@ -73,10 +72,10 @@ class TermsAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 10
-      val agg = resp.aggregations.map("agg1").asInstanceOf[StringTerms]
-      agg.getBuckets.size shouldBe 2
-      agg.getBucketByKey("meth kingpin").getDocCount shouldBe 2
-      agg.getBucketByKey("lawyer").getDocCount shouldBe 1
+      val buckets = getBuckets(resp)
+      buckets.size shouldBe 2
+      getBucketDocCountByKey(buckets, "meth kingpin") shouldBe 2
+      getBucketDocCountByKey(buckets, "lawyer") shouldBe 1
     }
 
     "should not return excluded fields (given a seq)" in {
@@ -87,12 +86,12 @@ class TermsAggregationTest extends AbstractAggregationTest {
       }.await
       resp.totalHits shouldBe 10
 
-      val agg = resp.aggregations.stringTermsResult("agg1")
-      agg.getBuckets.size shouldBe 4
-      agg.getBucketByKey("meth sidekick").getDocCount shouldBe 3
-      agg.getBucketByKey("meth kingpin").getDocCount shouldBe 2
-      agg.getBucketByKey("dea agent").getDocCount shouldBe 2
-      agg.getBucketByKey("heavy").getDocCount shouldBe 2
+      val buckets = getBuckets(resp)
+      buckets.size shouldBe 4
+      getBucketDocCountByKey(buckets, "meth sidekick") shouldBe 3
+      getBucketDocCountByKey(buckets, "meth kingpin") shouldBe 2
+      getBucketDocCountByKey(buckets, "dea agent") shouldBe 2
+      getBucketDocCountByKey(buckets, "heavy") shouldBe 2
     }
 
     "should group by field and return a missing value" in {
@@ -104,12 +103,12 @@ class TermsAggregationTest extends AbstractAggregationTest {
       }.await
       resp.totalHits shouldBe 10
 
-      val agg = resp.aggregations.stringTermsResult("agg1")
-      agg.getBuckets.size shouldBe 4
-      agg.getBucketByKey("lavell").getDocCount shouldBe 1
-      agg.getBucketByKey("bryan").getDocCount shouldBe 1
-      agg.getBucketByKey("dean").getDocCount shouldBe 1
-      agg.getBucketByKey("no-name").getDocCount shouldBe 7
+      val buckets = getBuckets(resp)
+      buckets.size shouldBe 4
+      getBucketDocCountByKey(buckets, "lavell") shouldBe 1
+      getBucketDocCountByKey(buckets, "bryan") shouldBe 1
+      getBucketDocCountByKey(buckets, "dean") shouldBe 1
+      getBucketDocCountByKey(buckets, "no-name") shouldBe 7
     }
   }
 }

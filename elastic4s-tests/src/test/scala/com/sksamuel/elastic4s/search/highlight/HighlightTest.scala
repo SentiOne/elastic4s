@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s.search.highlight
 
-import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.ElasticsearchClientUri
+import com.sksamuel.elastic4s.embedded.LocalNode
+import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
 import com.sksamuel.elastic4s.testkit.ResponseConverterImplicits._
 import com.sksamuel.elastic4s.testkit.{DualClient, DualElasticSugar}
 import org.elasticsearch.action.support.WriteRequest.RefreshPolicy

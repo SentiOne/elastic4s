@@ -5,6 +5,7 @@ import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class NestedQueryTest extends WordSpec with SharedElasticSugar with Matchers {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   client.execute {
     createIndex("nested").mappings(

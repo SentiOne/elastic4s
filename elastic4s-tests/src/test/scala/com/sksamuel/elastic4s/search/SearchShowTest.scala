@@ -27,14 +27,7 @@ class SearchShowTest extends WordSpec with Matchers with ElasticSugar {
           |        {
           |          "match" : {
           |            "location" : {
-          |              "query" : "the wall",
-          |              "operator" : "OR",
-          |              "prefix_length" : 0,
-          |              "max_expansions" : 50,
-          |              "fuzzy_transpositions" : true,
-          |              "lenient" : false,
-          |              "zero_terms_query" : "NONE",
-          |              "boost" : 1.0
+          |              "query" : "the wall"
           |            }
           |          }
           |        }
@@ -43,18 +36,14 @@ class SearchShowTest extends WordSpec with Matchers with ElasticSugar {
           |        {
           |          "term" : {
           |            "name" : {
-          |              "value" : "snow",
-          |              "boost" : 1.0
+          |              "value" : "snow"
           |            }
           |          }
           |        }
-          |      ],
-          |      "disable_coord" : false,
-          |      "adjust_pure_negative" : true,
-          |      "boost" : 1.0
+          |      ]
           |    }
           |  }
-          |}""".stripMargin.trim
+          |}""".stripMargin.trim.replaceAll("\n\\s*", "").replaceAll(" : ", ":")
     }
   }
 }

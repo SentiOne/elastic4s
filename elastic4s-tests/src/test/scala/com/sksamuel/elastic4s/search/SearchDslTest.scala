@@ -3,26 +3,34 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.Preference.Shards
 import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.http.search.SearchBodyBuilderFn
+import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
+import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.script.ScriptFieldDefinition
+import com.sksamuel.elastic4s.searches.SearchDefinition
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.cluster.routing.Preference
 import org.elasticsearch.common.geo.{GeoDistance, GeoPoint}
-import org.elasticsearch.common.unit.DistanceUnit
+import org.elasticsearch.common.unit.{DistanceUnit, TimeValue}
 import org.elasticsearch.index.query.{MultiMatchQueryBuilder, RegexpFlag, SimpleQueryStringFlag}
 import org.elasticsearch.index.search.MatchQuery.ZeroTermsQuery
+import org.elasticsearch.script.{Script, ScriptType}
 import org.elasticsearch.search.MultiValueMode
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval
 import org.elasticsearch.search.aggregations.bucket.terms.Terms
+import org.elasticsearch.search.builder.SearchSourceBuilder
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext
 import org.elasticsearch.search.sort.ScriptSortBuilder.ScriptSortType
-import org.elasticsearch.search.sort.{SortMode, SortOrder}
+import org.elasticsearch.search.sort.{SortBuilder, SortMode, SortOrder}
+import org.elasticsearch.search.suggest.SuggestBuilder
 import org.elasticsearch.search.suggest.term.TermSuggestionBuilder.SuggestMode
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 
 class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.http.ElasticDsl._
 
   "the search dsl" should "accept wildcards for index and types" in {
     val req = search("*") types "*" limit 10

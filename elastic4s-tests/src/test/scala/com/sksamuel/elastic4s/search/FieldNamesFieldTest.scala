@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FlatSpec, Matchers}
 
 class FieldNamesFieldTest extends FlatSpec with Matchers with ElasticSugar {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   client.execute {
     createIndex("space")

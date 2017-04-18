@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.testkit.SharedElasticSugar
 import org.scalatest.{Matchers, WordSpec}
 
 class ExistsQueryDefinitionTest extends WordSpec with SharedElasticSugar with Matchers {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   client.execute(
     bulk(

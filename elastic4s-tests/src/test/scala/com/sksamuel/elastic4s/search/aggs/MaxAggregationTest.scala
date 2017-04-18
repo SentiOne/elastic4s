@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 class MaxAggregationTest extends AbstractAggregationTest {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   "max aggregation" - {
     "should count max value for field" in {
@@ -10,8 +11,8 @@ class MaxAggregationTest extends AbstractAggregationTest {
         }
       }.await
       resp.totalHits shouldBe 10
-      val aggs = resp.aggregations.maxResult("agg1")
-      aggs.getValue shouldBe 60
+      val agg = resp.aggregations("agg1").asInstanceOf[Map[String, Double]]("value")
+      agg shouldBe 60
     }
   }
 }

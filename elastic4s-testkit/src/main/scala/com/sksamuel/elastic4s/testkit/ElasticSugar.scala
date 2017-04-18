@@ -1,19 +1,21 @@
 package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.embedded.LocalNode
-import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes, TcpClient}
+import com.sksamuel.elastic4s.http.index.RefreshIndexResponse
+import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, IndexAndTypes, Indexes}
 import org.elasticsearch.ResourceAlreadyExistsException
-import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.cluster.health.ClusterHealthStatus
 import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.{BeforeAndAfterAll, Suite}
 import org.slf4j.LoggerFactory
+import ResponseConverterImplicits._
 
 trait ElasticSugar extends AbstractElasticSugar with ClassLocalNodeProvider with BeforeAndAfterAll {
   this: Suite with LocalNodeProvider =>
 
   implicit val node = getNode
-  implicit val client = node.elastic4sclient(false)
+  implicit val client = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 
   override def afterAll(): Unit = {
     node.stop(true)
@@ -24,7 +26,7 @@ trait SharedElasticSugar extends AbstractElasticSugar with ClassloaderLocalNodeP
   this: Suite with LocalNodeProvider =>
 
   implicit val node = getNode
-  implicit val client = node.elastic4sclient(false)
+  implicit val client = HttpClient(ElasticsearchClientUri("elasticsearch://" + node.ipAndPort))
 }
 
 trait DualElasticSugar extends AbstractElasticSugar with AlwaysNewLocalNodeProvider {
@@ -38,16 +40,16 @@ trait DualElasticSugar extends AbstractElasticSugar with AlwaysNewLocalNodeProvi
   */
 trait AbstractElasticSugar extends ElasticDsl {
   this: Suite with LocalNodeProvider =>
-
   def node: LocalNode
-  def client: TcpClient
+  def client: HttpClient
   private val logger = LoggerFactory.getLogger(getClass)
+  import DefaultJsonImplicits._
 
   // refresh all indexes
-  def refreshAll(): RefreshResponse = refresh(Indexes.All)
+  def refreshAll(): RefreshIndexResponse = refresh(Indexes.All)
 
   // refreshes all specified indexes
-  def refresh(indexes: Indexes): RefreshResponse = {
+  def refresh(indexes: Indexes): RefreshIndexResponse = {
     client.execute {
       refreshIndex(indexes)
     }.await
@@ -55,9 +57,10 @@ trait AbstractElasticSugar extends ElasticDsl {
 
   def blockUntilGreen(): Unit = {
     blockUntil("Expected cluster to have green status") { () =>
-      client.execute {
+      val status = client.execute {
         clusterHealth()
-      }.await.getStatus == ClusterHealthStatus.GREEN
+      }.await.status
+      ClusterHealthStatus.fromString(status) == ClusterHealthStatus.GREEN
     }
   }
 

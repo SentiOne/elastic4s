@@ -1,9 +1,11 @@
 package com.sksamuel.elastic4s.search.aggs
 
+import com.sksamuel.elastic4s.http.search.SearchResponse
 import com.sksamuel.elastic4s.testkit.ElasticSugar
 import org.scalatest.{FreeSpec, Matchers}
 
 abstract class AbstractAggregationTest extends FreeSpec with Matchers with ElasticSugar {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   client.execute {
     createIndex("aggregations") mappings {
@@ -31,4 +33,15 @@ abstract class AbstractAggregationTest extends FreeSpec with Matchers with Elast
 
   refresh("aggregations")
   blockUntilCount(10, "aggregations")
+
+  protected def getBuckets(searchResponse: SearchResponse, aggregationName: String = "agg1"): List[Map[String, AnyRef]] = {
+    val agg = searchResponse.aggregations(aggregationName).asInstanceOf[Map[String, AnyRef]]
+    agg("buckets").asInstanceOf[List[Map[String, AnyRef]]]
+  }
+
+  protected def getBucketDocCountByKey[T](buckets: List[Map[String, AnyRef]], key: T) : Integer = {
+    buckets
+      .find(bucket => bucket("key") == key)
+      .map(bucket => bucket("doc_count").asInstanceOf[Integer]).getOrElse(0)
+  }
 }

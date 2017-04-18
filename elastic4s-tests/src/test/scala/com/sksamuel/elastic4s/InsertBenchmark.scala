@@ -11,6 +11,7 @@ import scala.util.Random
 class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
 
   import scala.concurrent.duration._
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   val n = 75000
   val b = 100
@@ -76,7 +77,7 @@ class InsertBenchmark extends FunSuite with ElasticSugar with Matchers {
 
     client.execute {
       search in "benchmark" / "articles" query "toxicology"
-    }.await.getHits.totalHits shouldBe n
+    }.await.totalHits shouldBe n
   }
 
   def randomTitle = "some article " + UUID.randomUUID.toString

@@ -8,6 +8,7 @@ import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
 class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   client.execute {
     createIndex("drinks").mappings {
@@ -36,7 +37,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
             .likeTexts("coors") minTermFreq 1 minDocFreq 1
         }
       }.await
-      resp.hits.map(_.id).toSet shouldBe Set("4", "8")
+      resp.hits.hits.map(_.id).toSet shouldBe Set("4", "8")
     }
 
     "find matches based on doc refs" in {
@@ -46,7 +47,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
             .likeDocs(DocumentRef("drinks", "alcohol", "4")) minTermFreq 1 minDocFreq 1
         }
       }.await
-      resp.hits.map(_.id).toSet shouldBe Set("8")
+      resp.hits.hits.map(_.id).toSet shouldBe Set("8")
     }
 
     "support artifical docs" in {
@@ -56,7 +57,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with ElasticSugar {
             .artificialDocs(ArtificialDocument("drinks", "alcohol", """{ "text" : "gin" }""")) minTermFreq 1 minDocFreq 1
         }
       }.await
-      resp.hits.map(_.id).toSet shouldBe Set("7", "9")
+      resp.hits.hits.map(_.id).toSet shouldBe Set("7", "9")
     }
   }
 }
