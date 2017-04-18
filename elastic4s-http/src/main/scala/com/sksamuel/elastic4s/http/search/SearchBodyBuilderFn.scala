@@ -5,9 +5,9 @@ import java.util
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
 import com.sksamuel.elastic4s.searches.SearchDefinition
-import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
+import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, TermSuggestionDefinition}
 import org.elasticsearch.common.bytes.BytesArray
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
+import org.elasticsearch.common.xcontent.{ToXContent, XContentBuilder, XContentFactory, XContentType}
 
 import scala.collection.JavaConverters._
 
@@ -97,6 +97,29 @@ object SearchBodyBuilderFn {
           term.sort.map(_.name().toLowerCase).foreach(builder.field("sort", _))
           term.stringDistance.map(_.name.toLowerCase).foreach(builder.field("string_distance", _))
           term.suggestMode.map(_.name().toLowerCase).foreach(builder.field("suggest_mode", _))
+          builder.endObject()
+          builder.endObject()
+        case completion: CompletionSuggestionDefinition =>
+          builder.startObject(completion.name)
+          completion.text.foreach(builder.field("text", _))
+          completion.prefix.foreach(builder.field("prefix", _))
+          completion.regex.foreach(builder.field("regex", _))
+          completion.analyzer.foreach(builder.field("analyzer", _))
+          builder.startObject("completion")
+          builder.field("field", completion.fieldname)
+          completion.size.foreach(builder.field("size", _))
+          completion.fuzziness.foreach { fuzziness =>
+            builder.startObject("fuzzy")
+            fuzziness.toXContent(builder, ToXContent.EMPTY_PARAMS)
+            completion.transpositions.foreach(builder.field("transpositions", _))
+            completion.fuzzyMinLength.foreach(builder.field("min_length", _))
+            completion.fuzzyPrefixLength.foreach(builder.field("prefix_length", _))
+            completion.unicodeAware.foreach(builder.field("unicode_aware", _))
+            builder.endObject()
+          }
+          completion.regexOptions.foreach { regexOptions =>
+            regexOptions.toXContent(builder, ToXContent.EMPTY_PARAMS)
+          }
           builder.endObject()
           builder.endObject()
       }

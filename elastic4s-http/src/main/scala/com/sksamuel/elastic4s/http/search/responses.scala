@@ -51,7 +51,7 @@ case class SearchHits(total: Int,
 
 case class SuggestionEntry(term: String) {
   def options: Seq[String] = Nil
-  def optionsText: String = ""
+  def optionsText: Seq[String] = Nil
 }
 
 case class CompletionSuggestionResult(entries: Seq[SuggestionEntry]) {
@@ -133,7 +133,13 @@ case class SearchResponse(took: Int,
   private def suggestion(name: String): Map[String, SuggestionResult] = suggest(name).map { result => result.text -> result }.toMap
 
   def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
-  def completionSuggestion(name: String): CompletionSuggestionResult = suggestion(name).asInstanceOf[CompletionSuggestionResult]
+  def completionSuggestion(name: String): CompletionSuggestionResult = {
+    CompletionSuggestionResult(suggestion(name).mapValues(sr => {
+      new SuggestionEntry(sr.text) {
+        override def optionsText: Seq[String] = sr.options.map { op => op.text }
+      }
+    }).values.toList)
+  }
   def phraseSuggestion(name: String): PhraseSuggestionResult = suggestion(name).asInstanceOf[PhraseSuggestionResult]
 
   def to[T: HitReader]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
