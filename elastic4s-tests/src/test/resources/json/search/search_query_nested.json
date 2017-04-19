@@ -7,16 +7,13 @@
           "filter": {
             "term": {
               "name": {
-                "value": "sammy",
-                "boost": 1.0
+                "value": "sammy"
               }
             }
-          },
-          "boost": 1.0
+          }
         }
       },
       "path": "obj1",
-      "ignore_unmapped": false,
       "score_mode": "avg",
       "boost": 14.5,
       "_name": "namey"

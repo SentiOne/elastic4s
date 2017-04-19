@@ -4,8 +4,7 @@
       "query": {
         "term": {
           "name": {
-            "value": "chris",
-            "boost": 1.0
+            "value": "chris"
           }
         }
       },
@@ -13,7 +12,6 @@
       "score_mode": "min",
       "min_children": 2,
       "max_children": 4,
-      "ignore_unmapped": false,
       "boost": 2.3,
       "_name": "namey"
     }

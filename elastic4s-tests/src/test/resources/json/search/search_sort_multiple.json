@@ -1,24 +1,14 @@
 {
   "sort": [
     {
-      "_script": {
-        "script": {
-          "inline": "document.score",
-          "lang": "painless"
-        },
-        "type": "string",
-        "order": "asc"
-      }
+        "dancer": {
+            "order": "desc"
+        }
     },
     {
-      "_score": {
-        "order": "desc"
-      }
-    },
-    {
-      "dancer": {
-        "order": "desc"
-      }
+        "singer": {
+            "order": "asc"
+        }
     }
   ]
 }

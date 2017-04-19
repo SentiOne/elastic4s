@@ -4,15 +4,12 @@
       "query": {
         "term": {
           "name": {
-            "value": "chris",
-            "boost": 1.0
+            "value": "chris"
           }
         }
       },
       "path": "singer",
-      "ignore_unmapped": false,
       "score_mode": "min",
-      "boost": 1.0,
       "_name": "namey"
     }
   }

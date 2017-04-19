@@ -12,8 +12,8 @@ object CommonTermsQueryBodyFn {
     builder.startObject(q.name)
     builder.field("query", q.text)
 
-    q.lowFreqOperator.map(_.toString).foreach(builder.field("low_freq_operator", _))
-    q.highFreqOperator.map(_.toString).foreach(builder.field("high_freq_operator", _))
+    q.lowFreqOperator.foreach(builder.field("low_freq_operator", _))
+    q.highFreqOperator.foreach(builder.field("high_freq_operator", _))
 
     q.minimumShouldMatch match {
       case Some(minimumShouldMatchString) => builder.field("minimum_should_match", minimumShouldMatchString)
@@ -25,7 +25,7 @@ object CommonTermsQueryBodyFn {
     }
 
     q.analyzer.map(_.toString).foreach(builder.field("analyzer", _))
-    q.cutoffFrequency.map(_.toString).foreach(builder.field("cutoff_frequency", _))
+    q.cutoffFrequency.foreach(builder.field("cutoff_frequency", _))
     q.boost.foreach(builder.field("boost", _))
     q.disableCoord.foreach(builder.field("disable_coord", _))
 

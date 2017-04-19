@@ -1,5 +1,4 @@
 {
-  "size": 5,
   "query": {
     "match": {
       "name": {
@@ -11,10 +10,8 @@
         "max_expansions": 4,
         "minimum_should_match": "75%",
         "fuzzy_transpositions": true,
-        "lenient": false,
-        "zero_terms_query": "ALL",
-        "cutoff_frequency": 3.4,
-        "boost": 1.0
+        "zero_terms_query": "all",
+        "cutoff_frequency": 3.4
       }
     }
   }

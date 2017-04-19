@@ -1,12 +1,9 @@
 {
-    "size": 5,
     "query": {
         "range": {
             "coldplay": {
-                "from": 4,
-                "to": 10,
-                "include_lower": true,
-                "include_upper": false,
+                "gte": 4,
+                "lt": 10,
                 "boost": 1.2
             }
         }

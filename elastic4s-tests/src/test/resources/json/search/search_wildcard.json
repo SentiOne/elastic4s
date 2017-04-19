@@ -1,9 +1,8 @@
 {
-  "size": 5,
   "query": {
     "wildcard": {
       "name": {
-        "wildcard": "*coldplay",
+        "value": "*coldplay",
         "rewrite": "no",
         "boost": 7.6
       }

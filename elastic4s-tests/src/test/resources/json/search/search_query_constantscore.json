@@ -4,8 +4,7 @@
       "filter": {
         "term": {
           "name": {
-            "value": "sammy",
-            "boost": 1.0
+            "value": "sammy"
           }
         }
       },

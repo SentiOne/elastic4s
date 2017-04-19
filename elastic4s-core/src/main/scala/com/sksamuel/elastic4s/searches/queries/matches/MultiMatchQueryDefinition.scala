@@ -36,7 +36,7 @@ case class MultiMatchQueryDefinition(text: String,
   def boost(boost: Double): MultiMatchQueryDefinition = copy(boost = boost.some)
 
   def fields(_fields: String*): MultiMatchQueryDefinition = fields(_fields.toIterable)
-  def fields(_fields: Iterable[String]): MultiMatchQueryDefinition = copy(fields = _fields.map(f => (f, -1F)).toSeq)
+  def fields(_fields: Iterable[String]): MultiMatchQueryDefinition = copy(fields = _fields.map(f => (f, 1F)).toSeq)
   def field(name: String, boost: Float): MultiMatchQueryDefinition = copy(fields = fields :+ (name, boost))
   def fields(fields: Map[String, Float]): MultiMatchQueryDefinition = copy(fields = fields.toSeq)
 

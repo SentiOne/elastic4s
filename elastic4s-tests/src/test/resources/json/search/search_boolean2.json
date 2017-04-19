@@ -1,5 +1,4 @@
 {
-  "size": 5,
   "query": {
     "bool": {
       "must": [
@@ -7,8 +6,6 @@
           "regexp": {
             "drummmer": {
               "value": "will*",
-              "flags_value": 65535,
-              "max_determinized_states": 10000,
               "boost": 5.0
             }
           }
@@ -16,8 +13,7 @@
         {
           "term": {
             "singer": {
-              "value": "chris",
-              "boost": 1.0
+              "value": "chris"
             }
           }
         }
@@ -26,8 +22,7 @@
         {
           "term": {
             "singer": {
-              "value": "anderson",
-              "boost": 1.0
+              "value": "anderson"
             }
           }
         }
@@ -36,8 +31,7 @@
         {
           "term": {
             "bassist": {
-              "value": "berryman",
-              "boost": 1.0
+              "value": "berryman"
             }
           }
         }

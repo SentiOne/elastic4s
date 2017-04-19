@@ -1,13 +1,11 @@
 {
-  "size": 5,
   "query": {
     "match_phrase_prefix": {
       "name": {
         "query": "coldplay",
         "analyzer": "snowball",
         "slop": 3,
-        "max_expansions": 3,
-        "boost": 1.0
+        "max_expansions": 3
       }
     }
   }

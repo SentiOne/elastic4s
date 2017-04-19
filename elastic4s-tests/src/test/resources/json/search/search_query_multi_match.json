@@ -3,15 +3,14 @@
     "multi_match": {
       "query": "this is my query",
       "fields": [
-        "genre^1.0",
+        "name^1.0",
         "location^1.0",
-        "name^1.0"
+        "genre^1.0"
       ],
       "type": "cross_fields",
       "operator": "AND",
       "analyzer": "whitespace",
-      "slop": 0,
-      "fuzziness": "SOMETHING",
+      "fuzziness": "something",
       "prefix_length": 4,
       "max_expansions": 4,
       "minimum_should_match": "2",

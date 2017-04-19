@@ -15,6 +15,7 @@ object FuzzyQueryBodyFn {
     q.prefixLength.foreach(builder.field("prefix_length", _))
     q.fuzziness.foreach(builder.field("fuzziness", _))
     q.boost.foreach(builder.field("boost", _))
+    q.transpositions.foreach(builder.field("transpositions", _))
     q.queryName.foreach(builder.field("_name", _))
     builder.endObject()
     builder.endObject()

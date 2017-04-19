@@ -4,15 +4,12 @@
       "query": {
         "term": {
           "name": {
-            "value": "chris",
-            "boost": 1.0
+            "value": "chris"
           }
         }
       },
       "parent_type": "singer",
       "score": true,
-      "ignore_unmapped": false,
-      "boost": 1.0,
       "_name": "namey"
     }
   }

@@ -54,7 +54,7 @@ class NestedQueryTest extends WordSpec with SharedElasticSugar with Matchers {
       client.execute {
         search("nested" / "places") query {
           nestedQuery("states").query {
-            boolQuery.must(
+            boolQuery().must(
               matchQuery("states.name", "Montana"),
               matchQuery("states.entry", 1889)
             )

@@ -5,7 +5,7 @@ import java.util
 import com.sksamuel.elastic4s.http.search.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.{QueryBuilderFn, SortContentBuilder}
 import com.sksamuel.elastic4s.searches.SearchDefinition
-import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, TermSuggestionDefinition}
+import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestionDefinition, PhraseSuggestionDefinition, TermSuggestionDefinition}
 import org.elasticsearch.common.bytes.BytesArray
 import org.elasticsearch.common.xcontent.{ToXContent, XContentBuilder, XContentFactory, XContentType}
 
@@ -32,15 +32,25 @@ object SearchBodyBuilderFn {
 
     if (request.sorts.nonEmpty) {
       builder.startArray("sort")
-      request.sorts.foreach { sort =>
-        builder.rawValue(new BytesArray(SortContentBuilder(sort).string), XContentType.JSON)
-      }
+      // Workaround for bug where separator is not added with rawValues
+      val arrayBody = new BytesArray(request.sorts.map(s => SortContentBuilder(s).string).mkString(","))
+      builder.rawValue(arrayBody, XContentType.JSON)
       builder.endArray()
     }
 
     if (request.highlight.nonEmpty) {
       builder.startObject("highlight")
       request.highlight.foreach { highlight =>
+        if (highlight.options.preTags.nonEmpty) {
+          builder.array("pre_tags", highlight.options.preTags : _*)
+        }
+        if (highlight.options.postTags.nonEmpty) {
+          builder.array("post_tags", highlight.options.postTags : _*)
+        }
+        highlight.options.boundaryChars.foreach(builder.field("boundary_chars", _))
+        highlight.options.boundaryMaxScan.foreach(builder.field("boundary_max_scan", _))
+        highlight.options.order.foreach(builder.field("order", _))
+        highlight.options.encoder.foreach(builder.field("encoder", _))
         builder.startObject("fields")
         highlight.fields.foreach { field =>
           builder.startObject(field.field)
@@ -55,6 +65,7 @@ object SearchBodyBuilderFn {
           field.matchedFields.foreach(builder.field("matched_fields", _))
           field.noMatchSize.foreach(builder.field("no_match_size", _))
           field.numOfFragments.foreach(builder.field("number_of_fragments", _))
+          field.highlighterType.foreach(builder.field("type", _))
           field.order.foreach(builder.field("order", _))
           field.phraseLimit.foreach(builder.field("phrase_limit", _))
           if (field.postTags.nonEmpty || field.preTags.nonEmpty) {
@@ -156,7 +167,7 @@ object SearchBodyBuilderFn {
 
     // aggregations
     if (request.aggs.nonEmpty) {
-      builder.startObject("aggs")
+      builder.startObject("aggregations")
       request.aggs.foreach { agg =>
         builder.rawField(agg.name, AggregationBuilderFn(agg).bytes, XContentType.JSON)
       }

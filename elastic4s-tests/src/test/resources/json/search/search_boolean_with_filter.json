@@ -1,13 +1,11 @@
 {
-  "size": 5,
   "query": {
     "bool": {
       "must": [
         {
           "term": {
             "title": {
-              "value": "Search",
-              "boost": 1.0
+              "value": "Search"
             }
           }
         }
@@ -16,15 +14,11 @@
         {
           "term": {
             "status": {
-              "value": "published",
-              "boost": 1.0
+              "value": "published"
             }
           }
         }
-      ],
-      "disable_coord": false,
-      "adjust_pure_negative": true,
-      "boost": 1.0
+      ]
     }
   }
 }

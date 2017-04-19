@@ -1,21 +1,7 @@
 {
   "query": {
     "query_string": {
-      "query": "coldplay",
-      "fields": [],
-      "use_dis_max": true,
-      "tie_breaker": 0.0,
-      "default_operator": "or",
-      "auto_generate_phrase_queries": false,
-      "max_determinized_states": 10000,
-      "enable_position_increments": true,
-      "fuzziness": "AUTO",
-      "fuzzy_prefix_length": 0,
-      "fuzzy_max_expansions": 50,
-      "phrase_slop": 0,
-      "escape": false,
-      "split_on_whitespace": true,
-      "boost": 1.0
+      "query": "coldplay"
     }
   },
   "suggest": {
@@ -23,33 +9,18 @@
       "text": "aqualuck by jethro toll",
       "term": {
         "field": "names",
-        "size": 5,
-        "suggest_mode": "MISSING",
-        "accuracy": 0.5,
-        "sort": "SCORE",
-        "string_distance": "INTERNAL",
-        "max_edits": 2,
-        "max_inspections": 5,
-        "max_term_freq": 0.01,
+        "min_doc_freq": 0.2,
         "prefix_length": 3,
-        "min_word_length": 4,
-        "min_doc_freq": 0.2
+        "size": 5,
+        "suggest_mode": "missing"
       }
     },
     "my-suggestion-3": {
       "text": "bountiful day by u22",
       "term": {
         "field": "names",
-        "suggest_mode": "MISSING",
-        "accuracy": 0.5,
-        "sort": "SCORE",
-        "string_distance": "LEVENSTEIN",
-        "max_edits": 2,
         "max_inspections": 3,
-        "max_term_freq": 0.01,
-        "prefix_length": 1,
-        "min_word_length": 4,
-        "min_doc_freq": 0.0
+        "string_distance": "levenstein"
       }
     },
     "my-suggestion-1": {
@@ -57,32 +28,17 @@
       "term": {
         "field": "names",
         "shard_size": 2,
-        "suggest_mode": "POPULAR",
-        "accuracy": 0.6,
-        "sort": "SCORE",
-        "string_distance": "INTERNAL",
-        "max_edits": 2,
-        "max_inspections": 5,
-        "max_term_freq": 0.01,
-        "prefix_length": 1,
-        "min_word_length": 4,
-        "min_doc_freq": 0.0
+        "suggest_mode": "popular",
+        "max_edits": 2
       }
     },
     "my-suggestion-4": {
       "text": "whatever some text",
       "term": {
         "field": "names",
-        "suggest_mode": "ALWAYS",
-        "accuracy": 0.5,
-        "sort": "SCORE",
-        "string_distance": "INTERNAL",
-        "max_edits": 2,
-        "max_inspections": 5,
-        "max_term_freq": 0.5,
-        "prefix_length": 1,
         "min_word_length": 5,
-        "min_doc_freq": 0.0
+        "max_term_freq": 0.5,
+        "suggest_mode": "always"
       }
     }
   }

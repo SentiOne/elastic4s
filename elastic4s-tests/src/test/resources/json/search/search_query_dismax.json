@@ -5,22 +5,12 @@
       "queries": [
         {
           "simple_query_string": {
-            "query": "coldplay",
-            "flags": -1,
-            "default_operator": "or",
-            "lenient": false,
-            "analyze_wildcard": false,
-            "boost": 1.0
+            "query": "coldplay"
           }
         },
         {
           "simple_query_string": {
-            "query": "london",
-            "flags": -1,
-            "default_operator": "or",
-            "lenient": false,
-            "analyze_wildcard": false,
-            "boost": 1.0
+            "query": "london"
           }
         }
       ],

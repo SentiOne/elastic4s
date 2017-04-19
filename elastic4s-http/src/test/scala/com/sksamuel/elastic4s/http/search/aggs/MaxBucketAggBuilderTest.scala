@@ -17,6 +17,6 @@ class MaxBucketAggBuilderTest extends FunSuite with Matchers {
       maxBucketAgg("max_monthly_sales", "sales_per_month>sales")
     )
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"aggs":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}}}},"max_monthly_sales":{"max_bucket":{"buckets_path":"sales_per_month>sales"}}}}"""
+      """{"aggregations":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggregations":{"sales":{"sum":{"field":"price"}}}},"max_monthly_sales":{"max_bucket":{"buckets_path":"sales_per_month>sales"}}}}"""
   }
 }
