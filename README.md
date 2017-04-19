@@ -1,3 +1,7 @@
+Explaining the changes in a fork
+=========
+The objective was to get rid of dependency on elasticsearch and leave only http stuff, with exception of test where localnode could stay.
+
 elastic4s - Elasticsearch Scala Client
 =========
 
